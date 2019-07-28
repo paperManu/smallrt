@@ -1,7 +1,5 @@
 #
-# Copyright (C) 2016 Emmanuel Durand
-#
-# This file is part of Splash.
+# Copyright (C) 2019 Emmanuel Durand
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +30,9 @@ include_directories(./)
 #
 add_executable(smallrt)
 target_sources(smallrt PRIVATE
+    hitable_list.cpp
     smallrt.cpp
+    sphere.cpp
 )
 
 #
