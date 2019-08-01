@@ -15,28 +15,32 @@
  * along with Splash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SMALLRT_HITABLE_H__
-#define __SMALLRT_HITABLE_H__
+#ifndef __SMALLRT_UTILS_H__
+#define __SMALLRT_UTILS_H__
 
-#include <memory>
+#include <random>
 
 #include "./ray.h"
 #include "./vector.h"
 
-class Material;
+static std::random_device random_device;
+static std::mt19937_64 random_gen(random_device());
+static std::uniform_real_distribution<> random_dis;
 
-struct HitRecord
+double unit_rand()
 {
-    double t{0.0};
-    Vector3 p{0.0, 0.0, 0.0};
-    Vector3 normal{0.0, 0.0, 0.0};
-    std::shared_ptr<Material> material{nullptr};
-};
+    return random_dis(random_gen);
+}
 
-class Hitable
+Vector3 random_unit_sphere()
 {
-  public:
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const = 0;
-};
+    Vector3 p;
+    do
+    {
+        p = 2.0 * Vector3(unit_rand(), unit_rand(), unit_rand()) - Vector3(1.0, 1.0, 1.0);
+    } while (p.squared_length() >= 1.0);
+
+    return p;
+}
 
 #endif

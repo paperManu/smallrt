@@ -29,6 +29,7 @@ class Vector3
     friend std::ostream& operator<<(std::ostream& os, const Vector3&);
     friend double dot(const Vector3& v, const Vector3& w);
     friend Vector3 cross(const Vector3& w, const Vector3& v);
+    friend Vector3 reflect(const Vector3& v, const Vector3& n);
 
     Vector3() : _values{0.0, 0.0, 0.0} {}
     Vector3(double x, double y, double z) : _values{x, y, z} {}
@@ -149,6 +150,11 @@ inline std::ostream& operator<<(std::ostream& os, const Vector3& v)
 {
     os << v._values[0] << " " << v._values[1] << " " << v._values[2];
     return os;
+}
+
+inline Vector3 reflect(const Vector3& v, const Vector3& n)
+{
+    return v - 2 * dot(v, n) * n;
 }
 
 #endif

@@ -15,28 +15,23 @@
  * along with Splash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SMALLRT_HITABLE_H__
-#define __SMALLRT_HITABLE_H__
-
-#include <memory>
+#ifndef __SMALLRT_CAMERA_H__
+#define __SMALLRT_CAMERA_H__
 
 #include "./ray.h"
 #include "./vector.h"
 
-class Material;
-
-struct HitRecord
-{
-    double t{0.0};
-    Vector3 p{0.0, 0.0, 0.0};
-    Vector3 normal{0.0, 0.0, 0.0};
-    std::shared_ptr<Material> material{nullptr};
-};
-
-class Hitable
+class Camera
 {
   public:
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const = 0;
+    Camera();
+    Ray get_ray(double u, double v);
+
+  private:
+    Vector3 _origin;
+    Vector3 _lower_left_corner;
+    Vector3 _horizontal;
+    Vector3 _vertical;
 };
 
 #endif

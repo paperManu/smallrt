@@ -15,28 +15,26 @@
  * along with Splash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SMALLRT_HITABLE_H__
-#define __SMALLRT_HITABLE_H__
+#ifndef __SMALLRT_MATERIAL_LAMBERT_H__
+#define __SMALLRT_MATERIAL_LAMBERT_H__
 
-#include <memory>
+#include "./material.h"
+#include "./utils.h"
 
-#include "./ray.h"
-#include "./vector.h"
-
-class Material;
-
-struct HitRecord
-{
-    double t{0.0};
-    Vector3 p{0.0, 0.0, 0.0};
-    Vector3 normal{0.0, 0.0, 0.0};
-    std::shared_ptr<Material> material{nullptr};
-};
-
-class Hitable
+class Lambert : public Material
 {
   public:
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const = 0;
+    Lambert(const Vector3& albedo) : _albedo(albedo) {}
+    virtual bool scatter(const Ray&, const HitRecord& rec, Vector3& attenuation, Ray& scattered) const final
+    {
+        auto target = rec.p + rec.normal + random_unit_sphere();
+        scattered = Ray(rec.p, target - rec.p);
+        attenuation = _albedo;
+        return true;
+    }
+
+  private:
+    Vector3 _albedo;
 };
 
 #endif

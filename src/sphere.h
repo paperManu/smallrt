@@ -18,18 +18,22 @@
 #ifndef __SMALLRT_SPHERE_H__
 #define __SMALLRT_SPHERE_H__
 
+#include <memory>
+
 #include "./hitable.h"
+#include "./material.h"
 
 class Sphere : public Hitable
 {
   public:
     Sphere() {}
-    Sphere(const Vector3& center, double radius) : _center(center), _radius(radius) {}
+    Sphere(const Vector3& center, double radius, std::shared_ptr<Material> material) : _center(center), _radius(radius), _material(material) {}
     virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const final;
 
   private:
     Vector3 _center;
     double _radius;
+    std::shared_ptr<Material> _material;
 };
 
 #endif

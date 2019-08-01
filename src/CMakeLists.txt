@@ -30,6 +30,7 @@ include_directories(./)
 #
 add_executable(smallrt)
 target_sources(smallrt PRIVATE
+    camera.cpp
     hitable_list.cpp
     smallrt.cpp
     sphere.cpp
