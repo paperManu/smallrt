@@ -24,7 +24,7 @@
 class Camera
 {
   public:
-    Camera();
+    Camera(const Vector3& from, const Vector3& at, const Vector3& up, double vfov, double aspect);
     Ray get_ray(double u, double v);
 
   private:

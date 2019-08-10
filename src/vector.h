@@ -125,7 +125,7 @@ class Vector3
         return operator*=(k);
     }
 
-    inline Vector3 unit_vector() { return *this / length(); }
+    inline Vector3 unit_vector() const { return *this / length(); }
 
   private:
     double _values[3];
@@ -156,5 +156,7 @@ inline Vector3 reflect(const Vector3& v, const Vector3& n)
 {
     return v - 2 * dot(v, n) * n;
 }
+
+bool refract(const Vector3& v, const Vector3& n, float ni_over_nt, Vector3& refracted);
 
 #endif

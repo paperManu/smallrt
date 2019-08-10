@@ -27,7 +27,7 @@ class Lambert : public Material
     Lambert(const Vector3& albedo) : _albedo(albedo) {}
     virtual bool scatter(const Ray&, const HitRecord& rec, Vector3& attenuation, Ray& scattered) const final
     {
-        auto target = rec.p + rec.normal + random_unit_sphere();
+        auto target = rec.p + rec.normal + random_unit_in_sphere();
         scattered = Ray(rec.p, target - rec.p);
         attenuation = _albedo;
         return true;

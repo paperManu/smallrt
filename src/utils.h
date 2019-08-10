@@ -27,20 +27,9 @@ static std::random_device random_device;
 static std::mt19937_64 random_gen(random_device());
 static std::uniform_real_distribution<> random_dis;
 
-double unit_rand()
-{
-    return random_dis(random_gen);
-}
-
-Vector3 random_unit_sphere()
-{
-    Vector3 p;
-    do
-    {
-        p = 2.0 * Vector3(unit_rand(), unit_rand(), unit_rand()) - Vector3(1.0, 1.0, 1.0);
-    } while (p.squared_length() >= 1.0);
-
-    return p;
-}
+double unit_rand();
+Vector3 random_unit_in_sphere();
+Vector3 random_unit_in_disk();
+double schlick(double cosine, double ref_index);
 
 #endif

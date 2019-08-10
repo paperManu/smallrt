@@ -4,6 +4,7 @@
 #include "./camera.h"
 #include "./hitable_list.h"
 #include "./material.h"
+#include "./material_dielectric.h"
 #include "./material_lambert.h"
 #include "./material_metal.h"
 #include "./ray.h"
@@ -44,13 +45,13 @@ int main(int, char**)
     Vector3 origin(0.0, 0.0, 0.0);
 
     std::vector<std::unique_ptr<Hitable>> list;
-    list.push_back(std::make_unique<Sphere>(Vector3(0.0, 0.0, -1.0), 0.5, std::make_shared<Lambert>(Vector3(0.8, 0.3, 0.3))));
+    list.push_back(std::make_unique<Sphere>(Vector3(0.0, 0.0, -1.0), 0.5, std::make_shared<Lambert>(Vector3(0.1, 0.2, 0.5))));
     list.push_back(std::make_unique<Sphere>(Vector3(0.0, -100.5, -1.0), 100.0, std::make_shared<Lambert>(Vector3(0.8, 0.8, 0.0))));
-    list.push_back(std::make_unique<Sphere>(Vector3(1.0, 0.0, -1.0), 0.5, std::make_shared<Metal>(Vector3(0.8, 0.6, 0.2))));
-    list.push_back(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0), 0.5, std::make_shared<Metal>(Vector3(0.8, 0.8, 0.8))));
+    list.push_back(std::make_unique<Sphere>(Vector3(1.0, 0.0, -1.0), 0.5, std::make_shared<Metal>(Vector3(0.8, 0.6, 0.2), 0.3)));
+    list.push_back(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0), 0.5, std::make_shared<Dielectric>(1.5)));
     auto world = std::make_unique<HitableList>(list);
 
-    Camera camera;
+    Camera camera(Vector3(-2.0, 3.0, 1.0), Vector3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 20.0, static_cast<double>(width) / static_cast<double>(height));
 
     for (uint32_t y = height - 1; y > 0; --y)
     {

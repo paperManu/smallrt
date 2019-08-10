@@ -34,6 +34,8 @@ target_sources(smallrt PRIVATE
     hitable_list.cpp
     smallrt.cpp
     sphere.cpp
+    utils.cpp
+    vector.cpp
 )
 
 #

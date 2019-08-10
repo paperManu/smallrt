@@ -24,17 +24,18 @@
 class Metal : public Material
 {
   public:
-    Metal(const Vector3& albedo) : _albedo(albedo) {}
+    Metal(const Vector3& albedo, double fuzz = 0.0) : _albedo(albedo), _fuzz(std::min(1.0, fuzz)) {}
     virtual bool scatter(const Ray& in, const HitRecord& rec, Vector3& attenuation, Ray& scattered) const final
     {
         auto reflected = reflect(in.direction().unit_vector(), rec.normal);
-        scattered = Ray(rec.p, reflected);
+        scattered = Ray(rec.p, reflected + _fuzz * random_unit_in_sphere());
         attenuation = _albedo;
         return dot(scattered.direction(), rec.normal) > 0;
     }
 
   private:
     Vector3 _albedo;
+    double _fuzz;
 };
 
 #endif
