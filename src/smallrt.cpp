@@ -51,7 +51,12 @@ int main(int, char**)
     list.push_back(std::make_unique<Sphere>(Vector3(-1.0, 0.0, -1.0), 0.5, std::make_shared<Dielectric>(1.5)));
     auto world = std::make_unique<HitableList>(list);
 
-    Camera camera(Vector3(-2.0, 3.0, 1.0), Vector3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 20.0, static_cast<double>(width) / static_cast<double>(height));
+    auto from = Vector3(3.0, 3.0, 1.0);
+    auto to = Vector3(0.0, 0.0, -1.0);
+    auto up = Vector3(0.0, 1.0, 0.0);
+    auto dist_to_focus = (from - to).length();
+    double aperture = 2.0;
+    Camera camera(from, to, up, 20.0, static_cast<double>(width) / static_cast<double>(height), aperture, dist_to_focus);
 
     for (uint32_t y = height - 1; y > 0; --y)
     {

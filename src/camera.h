@@ -24,14 +24,16 @@
 class Camera
 {
   public:
-    Camera(const Vector3& from, const Vector3& at, const Vector3& up, double vfov, double aspect);
+    Camera(const Vector3& from, const Vector3& at, const Vector3& up, double vfov, double aspect, double aperture, double focus_dist);
     Ray get_ray(double u, double v);
 
   private:
+    double _lens_radius;
     Vector3 _origin;
     Vector3 _lower_left_corner;
     Vector3 _horizontal;
     Vector3 _vertical;
+    Vector3 _u, _v, _w;
 };
 
 #endif

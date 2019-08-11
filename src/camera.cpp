@@ -1,23 +1,25 @@
 #include "./camera.h"
 
-#include <iostream>
+#include "./utils.h"
 
-Camera::Camera(const Vector3& from, const Vector3& at, const Vector3& up, double vfov, double aspect)
+Camera::Camera(const Vector3& from, const Vector3& at, const Vector3& up, double vfov, double aspect, double aperture, double focus_dist)
 {
-    Vector3 u, v, w;
+    _lens_radius = aperture / 2.0;
     double theta = vfov * M_PI / 180.0;
     double half_height = tan(theta / 2.0);
     double half_width = aspect * half_height;
     _origin = from;
-    w = (from - at).unit_vector();
-    u = cross(up, w).unit_vector();
-    v = cross(w, u);
-    _lower_left_corner = _origin - half_width * u - half_height * v - w;
-    _horizontal = 2.0 * half_width * u;
-    _vertical = 2.0 * half_height * v;
+    _w = (from - at).unit_vector();
+    _u = cross(up, _w).unit_vector();
+    _v = cross(_w, _u);
+    _lower_left_corner = _origin - half_width * focus_dist * _u - half_height * focus_dist * _v - focus_dist * _w;
+    _horizontal = 2.0 * half_width * focus_dist * _u;
+    _vertical = 2.0 * half_height * focus_dist * _v;
 }
 
-Ray Camera::get_ray(double u, double v)
+Ray Camera::get_ray(double s, double t)
 {
-    return Ray(_origin, _lower_left_corner + u * _horizontal + v * _vertical - _origin);
+    Vector3 rd = _lens_radius * random_unit_in_disk();
+    Vector3 offset = _u * rd.x() + _v * rd.y();
+    return Ray(_origin + offset, _lower_left_corner + s * _horizontal + t * _vertical - _origin - offset);
 }
