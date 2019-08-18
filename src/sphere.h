@@ -28,7 +28,7 @@ class Sphere : public Hitable
   public:
     Sphere() {}
     Sphere(const Vector3& center, double radius, std::shared_ptr<Material> material) : _center(center), _radius(radius), _material(material) {}
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const final;
+    virtual bool hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const final;
 
   private:
     Vector3 _center;

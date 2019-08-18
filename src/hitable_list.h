@@ -28,7 +28,7 @@ class HitableList : public Hitable
   public:
     HitableList() {}
     HitableList(std::vector<std::unique_ptr<Hitable>>& list) : _list(std::move(list)) {}
-    virtual bool hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const final;
+    virtual bool hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const final;
 
   private:
     std::vector<std::unique_ptr<Hitable>> _list;
