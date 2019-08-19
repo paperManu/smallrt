@@ -1,0 +1,3 @@
+[submodule "external/ispc"]
+	path = external/ispc
+	url = https://github.com/ispc/ispc.git
