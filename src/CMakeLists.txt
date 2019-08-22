@@ -24,6 +24,7 @@ add_definitions(-Wall -Wextra -Werror)
 # Includes
 #
 include_directories(./)
+include_directories(../external/stb)
 
 #
 # Targets

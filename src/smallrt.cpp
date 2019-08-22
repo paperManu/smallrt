@@ -1,5 +1,9 @@
 #include <iostream>
 #include <memory>
+#include <vector>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
 #include "./camera.h"
 #include "./hitable_list.h"
@@ -66,8 +70,10 @@ int main(int, char**)
 {
     uint32_t width = 480;
     uint32_t height = 240;
+    uint32_t channels = 3;
     uint32_t sample_count = 4;
-    std::cout << "P3\n" << width << " " << height << "\n255\n";
+
+    std::vector<uint8_t> image(static_cast<size_t>(width * height * channels));
 
     Vector3 lower_left_corner(-2.0, -1.0, -1.0);
     Vector3 horizontal(4.0, 0.0, 0.0);
@@ -83,7 +89,7 @@ int main(int, char**)
     double aperture = 0.05;
     Camera camera(from, to, up, 20.0, static_cast<double>(width) / static_cast<double>(height), aperture, dist_to_focus);
 
-    for (uint32_t y = height - 1; y > 0; --y)
+    for (uint32_t y = 0; y < height; ++y)
     {
         for (uint32_t x = 0; x < width; ++x)
         {
@@ -99,12 +105,13 @@ int main(int, char**)
             color /= sample_count;
             color = Vector3(sqrt(color.r()), sqrt(color.g()), sqrt(color.b()));
 
-            int ir = static_cast<int>(255.99 * color.r());
-            int ig = static_cast<int>(255.99 * color.g());
-            int ib = static_cast<int>(255.99 * color.b());
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            image[((height - y - 1) * width + x) * channels] = static_cast<uint8_t>(255.99 * color.r());
+            image[((height - y - 1) * width + x) * channels + 1] = static_cast<uint8_t>(255.99 * color.g());
+            image[((height - y - 1) * width + x) * channels + 2] = static_cast<uint8_t>(255.99 * color.b());
         }
     }
+
+    stbi_write_tga("render.tga", width, height, channels, image.data());
 
     return 0;
 }
