@@ -32,6 +32,10 @@ class Ray
     Vector3& direction() { return _b; }
     Vector3 point_at_parameter(double t) const { return _a + t * _b; }
 
+  public:
+    Vector3 attenuation{1.0, 1.0, 1.0};
+    uint32_t depth{0};
+
   private:
     Vector3 _a;
     Vector3 _b;

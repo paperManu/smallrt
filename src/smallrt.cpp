@@ -16,24 +16,42 @@
 #include "./utils.h"
 #include "./vector.h"
 
-Vector3 get_color(const Ray& r, const HitableList* world, int depth = 0)
+Vector3 get_color(std::vector<Ray>& rays, const HitableList* world)
 {
     HitRecord rec;
-    if (world->hit(r, 0.0001, std::numeric_limits<double>::max(), rec))
+    Vector3 color;
+
+    while (!rays.empty())
     {
-        Ray scattered;
-        Vector3 attenuation;
-        if (depth < 50 && rec.material->scatter(r, rec, attenuation, scattered))
-            return attenuation * get_color(scattered, world, depth + 1);
-        else
-            return Vector3();
+        std::vector<Ray> newRays;
+        for (const auto& ray : rays)
+        {
+            if (world->hit(ray, 0.0001, std::numeric_limits<double>::max(), rec))
+            {
+                Ray scattered;
+                Vector3 attenuation;
+                if (ray.depth < 50 && rec.material->scatter(ray, rec, attenuation, scattered))
+                {
+                    scattered.depth = ray.depth + 1;
+                    scattered.attenuation = ray.attenuation * attenuation;
+                    newRays.push_back(scattered);
+                }
+                else
+                {
+                    color += ray.attenuation;
+                }
+            }
+            else
+            {
+                auto unit_direction = ray.direction().unit_vector();
+                auto t = 0.5 * (unit_direction.y() + 1.0);
+                color += ray.attenuation * ((1.0 - t) * Vector3(1.0, 1.0, 1.0) + t * Vector3(0.5, 0.7, 1.0));
+            }
+        }
+        std::swap(rays, newRays);
     }
-    else
-    {
-        auto unit_direction = r.direction().unit_vector();
-        auto t = 0.5 * (unit_direction.y() + 1.0);
-        return (1.0 - t) * Vector3(1.0, 1.0, 1.0) + t * Vector3(0.5, 0.7, 1.0);
-    }
+
+    return color;
 }
 
 std::unique_ptr<HitableList> random_scene()
@@ -94,14 +112,17 @@ int main(int, char**)
         for (uint32_t x = 0; x < width; ++x)
         {
             Vector3 color(0.0, 0.0, 0.0);
+            std::vector<Ray> rays;
             for (uint32_t s = 0; s < sample_count; ++s)
             {
                 double u = (static_cast<double>(x) + unit_rand()) / static_cast<double>(width);
                 double v = (static_cast<double>(y) + unit_rand()) / static_cast<double>(height);
 
-                auto ray = camera.get_ray(u, v);
-                color += get_color(ray, world.get());
+                rays.push_back(camera.get_ray(u, v));
             }
+            
+            color = get_color(rays, world.get());
+
             color /= sample_count;
             color = Vector3(sqrt(color.r()), sqrt(color.g()), sqrt(color.b()));
 
