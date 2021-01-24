@@ -23,6 +23,18 @@ impl ops::Neg for &Vector {
     }
 }
 
+impl ops::Neg for Vector {
+    type Output = Vector;
+
+    fn neg(self) -> Vector {
+        Vector {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z
+        }
+    }
+}
+
 impl ops::Add<&Vector> for &Vector {
     type Output = Vector;
 
@@ -31,6 +43,90 @@ impl ops::Add<&Vector> for &Vector {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
             z: self.z + rhs.z
+        }
+    }
+}
+
+impl ops::Add<Vector> for &Vector {
+    type Output = Vector;
+
+    fn add(self, rhs: Vector) -> Vector {
+        Vector {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z
+        }
+    }
+}
+
+impl ops::Add<Vector> for Vector {
+    type Output = Vector;
+
+    fn add(self, rhs: Vector) -> Vector {
+        Vector {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z
+        }
+    }
+}
+
+impl ops::Add<&Vector> for Vector {
+    type Output = Vector;
+
+    fn add(self, rhs: &Vector) -> Vector {
+        Vector {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z
+        }
+    }
+}
+
+impl ops::Sub<&Vector> for &Vector {
+    type Output = Vector;
+
+    fn sub(self, rhs: &Vector) -> Vector {
+        Vector {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z
+        }
+    }
+}
+
+impl ops::Sub<Vector> for &Vector {
+    type Output = Vector;
+
+    fn sub(self, rhs: Vector) -> Vector {
+        Vector {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z
+        }
+    }
+}
+
+impl ops::Sub<&Vector> for Vector {
+    type Output = Vector;
+
+    fn sub(self, rhs: &Vector) -> Vector {
+        Vector {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z
+        }
+    }
+}
+
+impl ops::Sub<Vector> for Vector {
+    type Output = Vector;
+
+    fn sub(self, rhs: Vector) -> Vector {
+        Vector {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z
         }
     }
 }
@@ -55,10 +151,30 @@ impl ops::Mul<&Vector> for f64 {
     }
 }
 
+impl ops::Mul<Vector> for f64 {
+    type Output = Vector;
+
+    fn mul(self, rhs: Vector) -> Vector{
+        &rhs * self
+    }
+}
+
 impl ops::Mul<&Vector> for &Vector {
     type Output = Vector;
 
     fn mul(self, rhs: &Vector) -> Vector {
+        Vector {
+            x: self.x * rhs.x,
+            y: self.y * rhs.y,
+            z: self.z * rhs.z
+        }
+    }
+}
+
+impl ops::Mul<Vector> for &Vector {
+    type Output = Vector;
+
+    fn mul(self, rhs: Vector) -> Vector {
         Vector {
             x: self.x * rhs.x,
             y: self.y * rhs.y,
@@ -75,6 +191,14 @@ impl ops::Div<f64> for &Vector {
     }
 }
 
+impl ops::Div<f64> for Vector {
+    type Output = Vector;
+
+    fn div(self, rhs: f64) -> Vector {
+        &self * (1.0 / rhs)
+    }
+}
+
 impl ToString for &Vector {
     fn to_string(&self) -> String {
         self.x.to_string() + " " + &self.y.to_string() + " " + &self.z.to_string()
@@ -82,12 +206,16 @@ impl ToString for &Vector {
 }
 
 impl Vector {
-    pub fn dot(&self, rhs: &Vector) -> Vector {
+    pub fn cross(&self, rhs: &Vector) -> Vector {
         Vector {
             x: self.y * rhs.z - self.z * rhs.y,
             y: self.z * rhs.x - self.x * rhs.z,
             z: self.x * rhs.y - self.y * rhs.x
         }
+    }
+
+    pub fn dot(&self, rhs: &Vector) -> f64 {
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
     pub fn length_squared(&self) -> f64 {
